@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 const socket = io(
-  "http://localhost:2929",
+  "https://git-code-collaboration-platform.onrender.com",
   {
     withCredentials: true
   }
