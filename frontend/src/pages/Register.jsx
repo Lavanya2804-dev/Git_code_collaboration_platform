@@ -27,9 +27,13 @@ function Register() {
         navigate("/login");
       }
     } catch (err) {
-      setError(err.message);
-      toast.error("Registration Failed");
-    } finally {
+  const errorMessage =
+    err.response?.data?.message || "Registration Failed";
+
+  setError(errorMessage);
+
+  toast.error(errorMessage);
+}finally {
       setLoading(false);
     }
   };
