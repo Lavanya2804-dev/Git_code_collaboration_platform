@@ -22,10 +22,13 @@ export const register = async (req, res) => {
 
     await user.save();
 
-    res.status(201).json({
-      message: "User registered successfully",
-      user,
-    });
+    const safeUser = await User.findById(user._id)
+  .select("-password");
+
+res.status(201).json({
+  message: "User registered successfully",
+  user: safeUser,
+});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -59,15 +62,18 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
   httpOnly: true,
-  secure: true,
-  sameSite: "none",
+  secure: false,
+  sameSite: "lax",
   maxAge: 24 * 60 * 60 * 1000,
 });
 
-    res.json({
-      message: "Login successful",
-      user,
-    });
+   const safeUser = await User.findById(user._id)
+  .select("-password");
+
+res.json({
+  message: "Login successful",
+  user: safeUser,
+});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -86,11 +92,10 @@ export const logout = (req, res) => {
     //     message: "User not logged in"
     //   });
     // }
-
-    res.clearCookie("token", {
+res.clearCookie("token", {
   httpOnly: true,
-  secure: true,
-  sameSite: "none",
+  secure: false,
+  sameSite: "lax",
 });
 
     res.json({
